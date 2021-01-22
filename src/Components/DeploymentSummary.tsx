@@ -18,13 +18,13 @@ function DeploymentSummary({getList}: Props): ReactElement {
     const {questionnaireName, status} = (location as Location).state || {questionnaireName: "/", status: ""};
 
     useEffect(() => {
-        getList();
+        // getList();
     }, []);
 
     return (
         <>
             {
-                redirect && <Redirect to="/"/>
+                redirect && <Redirect to={{pathname: "/", state: {status: " "}}}/>
             }
             <h1>
                 Questionnaire

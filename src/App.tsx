@@ -13,6 +13,8 @@ import DeploymentSummary from "./Components/DeploymentSummary";
 import {ONSPanel} from "./Components/ONSDesignSystem/ONSPanel";
 import DeleteConfirmation from "./Components/DeleteConfirmation";
 import NotProductionWarning from "./Components/ONSDesignSystem/NotProductionWarning";
+import {getAllInstruments} from "./api";
+import {useApi} from "./api/hooks";
 
 const divStyle = {
     minHeight: "calc(67vh)"
@@ -29,9 +31,7 @@ function App(): ReactElement {
     const location = useLocation();
     const {status} = (location as Location).state || {status: ""};
 
-    useEffect(() => {
-        getInstrumentList();
-    }, []);
+    const [isLoading, data, error] = useApi(getAllInstruments, status);
 
     function getInstrumentList() {
         setInstruments([]);
@@ -86,7 +86,7 @@ function App(): ReactElement {
                                 <UploadPage/>
                             </Route>
                             <Route path="/delete">
-                                <DeleteConfirmation  getList={getInstrumentList}/>
+                                <DeleteConfirmation/>
                             </Route>
                             <Route path="/">
 
@@ -109,7 +109,7 @@ function App(): ReactElement {
                                     </p>
                                 </ONSPanel>
                                 <ErrorBoundary errorMessageText={"Unable to load questionnaire table correctly"}>
-                                    <InstrumentList list={instruments} listError={listError}/>
+                                    <InstrumentList listIsLoading={isLoading} list={data} listError={error}/>
                                 </ErrorBoundary>
                             </Route>
                         </Switch>

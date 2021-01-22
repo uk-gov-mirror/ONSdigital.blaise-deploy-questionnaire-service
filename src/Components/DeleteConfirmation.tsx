@@ -52,7 +52,7 @@ function confirmDeleteRadios(setConfirm: (value: (((prevState: (boolean | null))
     </fieldset>;
 }
 
-function DeleteConfirmation({getList}: Props): ReactElement {
+function DeleteConfirmation(): ReactElement {
     const [confirm, setConfirm] = useState<boolean | null>(null);
     const [message, setMessage] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -76,7 +76,6 @@ function DeleteConfirmation({getList}: Props): ReactElement {
 
         deleteInstrument()
             .then(async () => {
-                getList();
                 setMessage(`Questionnaire: ${instrumentName} Successfully deleted`);
                 setLoading(false);
                 setRedirect(true);
