@@ -25,6 +25,8 @@ interface Location {
 function App(): ReactElement {
     const [instruments, setInstruments] = useState<Instrument[]>([]);
     const [listError, setListError] = useState<string>("Loading ...");
+    const [message, setMessage] = useState<string>("");
+    const [message2, setMessage2] = useState<string>("");
 
     const location = useLocation();
     const {status} = (location as Location).state || {status: ""};
@@ -32,6 +34,54 @@ function App(): ReactElement {
     useEffect(() => {
         getInstrumentList();
     }, []);
+
+    useEffect(() => {
+        const source = new EventSource("/events");
+
+        source.onopen = () => {
+            console.log("Event onopen");
+        };
+
+        source.onerror = () => {
+            console.log("Event onerror");
+        };
+
+        source.onmessage = (e) => {
+            // console.log(e);
+            const data = JSON.parse(e.data);
+            console.log(JSON.parse(e.data));
+            const {num, installing} = data;
+            console.log(`Event got num ${num} ${e.timeStamp}`);
+            setMessage2(installing);
+
+        };
+
+    }, []);
+
+
+    function InstallButton() {
+        console.log("start");
+        const source = new EventSource("/install2");
+
+        source.onopen = () => {
+            console.log("Event onopen");
+        };
+
+        source.onerror = () => {
+            console.log("Event onerror");
+            getInstrumentList();
+            source.close();
+        };
+
+        source.onmessage = (e) => {
+            // console.log(e);
+            const data = JSON.parse(e.data);
+            console.log(JSON.parse(e.data));
+            const {num, installing} = data;
+            setMessage(installing);
+
+        };
+    }
 
     function getInstrumentList() {
         setInstruments([]);
@@ -74,8 +124,18 @@ function App(): ReactElement {
             }
             <BetaBanner/>
             <Header title={"Deploy Questionnaire Service"}/>
+
+            <button onClick={() => InstallButton()}>CLick me to install</button>
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">
+
+                    {
+                        (message !== "" && <ONSPanel>{message}</ONSPanel>)
+                    }
+                    {
+                        (message2 !== "" && <ONSPanel>Message 2: {message2}</ONSPanel>)
+                    }
+
                     <DefaultErrorBoundary>
 
                         <Switch>
