@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {Instrument} from "../../Interfaces";
 import dateFormatter from "dayjs";
@@ -11,6 +11,32 @@ interface Props {
 
 function InstrumentList({list, listError}: Props): ReactElement {
     list.sort((a: Instrument, b: Instrument) => Date.parse(b.installDate) - Date.parse(a.installDate));
+
+    useEffect(() => {
+        document.body.className = "js-enabled";
+        let i;
+        const s = "https://cdn.ons.gov.uk/sdc/design-system/31.4.0/scripts/main.js".split(","),
+            c = document.createElement("script");
+        if (!("noModule" in c)) {
+            for (i = 0; i < s.length; i++) {
+                s[i] = s[i].replace(".js", ".es5.js");
+            }
+        }
+        for (i = 0; i < s.length; i++) {
+            const e = document.createElement("script");
+            e.src = s[i];
+            document.body.appendChild(e);
+        }
+    }, []);
+
+    useEffect(() => {
+        const filterButton = document.getElementById("reset-filter-button");
+        if (filterButton !== null){
+            filterButton.click();
+            console.log("print");
+            filterButton.click();
+        }
+    }, [list]);
 
     return <>
         <h1>
@@ -40,8 +66,9 @@ function InstrumentList({list, listError}: Props): ReactElement {
                         <h2 className="u-fs-l">Filters</h2>
                         <form className="js-adv-filter__form" method="POST">
                             <button className="adv-filter__reset js-adv-filter__reset btn btn--secondary btn--small"
-                                    type="reset">
-                                <span className="btn__inner">Reset all filters</span></button>
+                                    type="reset" id="reset-filter-button">
+                                <span className="btn__inner">Reset all filters</span>
+                            </button>
 
                             <div className="adv-filter__item js-adv-filter__item" data-default-text="All surveys"
                                  data-multi-select-text="{n} filters selected">
@@ -78,13 +105,13 @@ function InstrumentList({list, listError}: Props): ReactElement {
                                 </fieldset>
                             </div>
 
-                            <div className="adv-filter__item js-adv-filter__item" data-default-text="All types"
+                            <div className="adv-filter__item js-adv-filter__item" data-default-text="All statuses"
                                  data-multi-select-text="{n} filters selected">
                                 <fieldset className="fieldset" aria-controls="adv-filter-gallery">
                                     <legend className="fieldset__legend">Questionnaire status</legend>
                                     <div className="adv-filter__selection">
                                         <span className="u-vh">Active filters: </span>
-                                        <span className="u-fs-s js-adv-filter__selection">All types</span>
+                                        <span className="u-fs-s js-adv-filter__selection">All statuses</span>
                                     </div>
                                     <p className="checkboxes__label"></p>
                                     <div className="checkboxes__items">
@@ -102,6 +129,15 @@ function InstrumentList({list, listError}: Props): ReactElement {
                                     <input type="checkbox" id="Erroneous" className="checkbox__input js-checkbox "
                                            value="Erroneous" data-filter="Erroneous"/>
                                     <label className="checkbox__label  " htmlFor="Erroneous" id="Erroneous-label">Erroneous
+                                    </label>
+                                  </span>
+                                        </p>
+                                        <br/>
+                                        <p className="checkboxes__item">
+                                  <span className="checkbox checkbox--toggle">
+                                    <input type="checkbox" id="Live" className="checkbox__input js-checkbox "
+                                           value="Live" data-filter="Live"/>
+                                    <label className="checkbox__label  " htmlFor="Live" id="Live-label">Live
                                     </label>
                                   </span>
                                         </p>
@@ -146,7 +182,7 @@ function InstrumentList({list, listError}: Props): ReactElement {
                                 return (
                                     <li key={item.name}
                                         className="filter__item js-filter__item"
-                                        data-filter={`opn ${item.status}`}
+                                        data-filter={`opn ${item.status} ${(item.active && "Live")}`}
                                         data-sort-index={index}>
                                         <div className="download__content">
                                             <h2 className="u-fs-m u-mt-no u-mb-xs">{item.name}</h2>
@@ -183,47 +219,10 @@ function InstrumentList({list, listError}: Props): ReactElement {
                                 );
                             })
                         }
-
-
-                        {/*<li className="filter__item js-filter__item"*/}
-                        {/*    data-filter="poster english local-authorities community-groups recruitment"*/}
-                        {/*    data-sort-index="1">*/}
-
-
-                        {/*    <div className="download">*/}
-                        {/*        <div className="download__image" aria-hidden="true">*/}
-                        {/*            <a className="download__image-link"*/}
-                        {/*               href="/patternlib-img/download-resources/documents/Print-Ready-A4GIP1-2021-v1-0-120620.pdf"*/}
-                        {/*            >*/}
-                        {/*                <img*/}
-                        {/*                    srcSet="/patternlib-img/download-resources/img/small/census-2021-matters-to-everyone.png 1x, /patternlib-img/download-resources/img/large/census-2021-matters-to-everyone.png 2x"*/}
-                        {/*                    src="/patternlib-img/download-resources/img/small/census-2021-matters-to-everyone.png"*/}
-                        {/*                    alt="" loading="lazy"/>*/}
-                        {/*            </a>*/}
-                        {/*        </div>*/}
-                        {/*        <div className="download__content">*/}
-                        {/*            <h3 className="u-fs-m u-mt-no u-mb-xs">*/}
-                        {/*                <a href="/patternlib-img/download-resources/documents/Print-Ready-A4GIP1-2021-v1-0-120620.pdf">Census*/}
-                        {/*                    2021 matters to everyone<span className="u-vh">,*/}
-                        {/*    PDF document download, 866KB, 1 page*/}
-                        {/*    </span></a>*/}
-                        {/*            </h3>*/}
-                        {/*            <span className="u-fs-s u-mb-xs download__meta" aria-hidden="true">*/}
-                        {/*    Poster,*/}
-                        {/*    PDF, 866KB, 1 page*/}
-                        {/*    </span>*/}
-                        {/*            <p className="download__excerpt">By taking part and encouraging others to do the*/}
-                        {/*                same, you’ll make sure your community gets the services it needs.</p>*/}
-                        {/*        </div>*/}
-                        {/*    </div>*/}
-                        {/*</li>*/}
                     </ul>
-                    <div className="adv-filter__no-results" data-fallback-gallery-id="adv-filter-gallery">
-                        <h2>
-                            {
-                                (list.length > 0 ? "No results found" : listError)
-                            }
-                        </h2>
+                    <div className={`adv-filter__no-results ${list.length > 0 && "u-hidden"}`}
+                         data-fallback-gallery-id="adv-filter-gallery">
+                        <h2>{(list.length > 0 ? "No results found" : listError)}</h2>
                     </div>
                 </div>
             </div>

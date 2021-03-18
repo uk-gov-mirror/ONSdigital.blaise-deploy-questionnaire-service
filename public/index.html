@@ -41,25 +41,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-
-    <script>
-      (function () {
-        document.body.className = "js-enabled"
-        let i;
-        const s = "https://cdn.ons.gov.uk/sdc/design-system/31.4.0/scripts/main.js".split(","),
-                c = document.createElement("script");
-        if (!("noModule" in c)) {
-          for (i = 0; i < s.length; i++) {
-            s[i] = s[i].replace(".js", ".es5.js");
-          }
-        }
-        for (i = 0; i < s.length; i++) {
-          const e = document.createElement("script");
-          e.src = s[i];
-          document.body.appendChild(e);
-        }
-      })();
-    </script>
   </body>
 
 </html>
