@@ -33,7 +33,6 @@ function InstrumentList({list, listError}: Props): ReactElement {
         const filterButton = document.getElementById("reset-filter-button");
         if (filterButton !== null){
             filterButton.click();
-            console.log("print");
             filterButton.click();
         }
     }, [list]);
@@ -42,7 +41,7 @@ function InstrumentList({list, listError}: Props): ReactElement {
         <h1>
             Table of questionnaires
         </h1>
-        <div className="u-mb-l">
+        <div className="u-mb-s">
             <ONSPanel>
                 <p>
                     Any <b>live</b> questionnaire within the table below <b>does not</b> have the
