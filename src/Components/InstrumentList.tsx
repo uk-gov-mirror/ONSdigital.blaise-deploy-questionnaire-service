@@ -100,6 +100,17 @@ function InstrumentList({list, listError}: Props): ReactElement {
                                     </label>
                                   </span>
                                         </p>
+                                        <br/>
+                                        <p className="checkboxes__item">
+                                  <span className="checkbox checkbox--toggle">
+                                    <input type="checkbox" id="lmc"
+                                           className="checkbox__input js-checkbox " value="lmc"
+                                           data-filter="lmc"/>
+                                    <label className="checkbox__label  " htmlFor="lmc"
+                                           id="lms-label">LMC
+                                    </label>
+                                  </span>
+                                        </p>
                                     </div>
                                 </fieldset>
                             </div>
@@ -159,7 +170,7 @@ function InstrumentList({list, listError}: Props): ReactElement {
                         </form>
                     </div>
                 </div>
-                <div className="grid__col col-8@m">
+                <div className="grid__col col-8@m" id="instrument-table">
                     <div className="adv-filter__results-options">
                         <div className="adv-filter__results-count">
                             <span className="js-adv-filter__results-count">{list.length}</span> results of {list.length}
@@ -180,6 +191,7 @@ function InstrumentList({list, listError}: Props): ReactElement {
                             list.map((item: Instrument, index) => {
                                 return (
                                     <li key={item.name}
+                                        id="instrument-table-row"
                                         className="filter__item js-filter__item"
                                         data-filter={`opn ${item.status} ${(item.active && "Live")}`}
                                         data-sort-index={index}>
@@ -199,7 +211,8 @@ function InstrumentList({list, listError}: Props): ReactElement {
                                                 <dd className="metadata__value grid__col col-8@m">{item.dataRecordCount}</dd>
 
                                             </dl>
-                                            <p id={`delete-${item.name}`}>
+                                            <p id={`delete-${item.name}`}
+                                               data-testid={`delete-${item.name}-block`}>
                                                 {
                                                     item.active ?
                                                         "Questionnaire is live"
@@ -209,7 +222,7 @@ function InstrumentList({list, listError}: Props): ReactElement {
                                                             pathname: "/delete",
                                                             state: {instrumentName: item.name}
                                                         }}>
-                                                            Delete {item.name}
+                                                            Delete
                                                         </Link>
                                                 }
                                             </p>

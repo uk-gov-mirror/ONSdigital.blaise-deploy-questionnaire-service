@@ -82,12 +82,8 @@ defineFeature(feature, test => {
         });
 
         then("I will not have the option to 'delete' displayed", () => {
-            const list = screen.queryAllByTestId(/instrument-table-row/i);
-            const listItemTwo = list[1];
-            const secondRowData = listItemTwo.lastChild;
-            if (secondRowData !== null) {
-                expect(secondRowData.textContent).toEqual("Questionnaire is live");
-            }
+            const deleteQuestionnaireBlock = screen.getByTestId(/delete-OPN2007T-block/i);
+            expect(deleteQuestionnaireBlock.textContent).toEqual("Questionnaire is live");
         });
 
         and("the landing screen displays a warning that live surveys cannot be deleted", async () => {
